@@ -40,8 +40,7 @@ void handleSerialIn() {
       // Input too long?
       if(inpPtr > (input+sizeof(input)-1)) {
         // Print warning
-        if(serialPrintAllowed())
-          serialPrint("Error: Line too long.\n");
+        Serial.println("Error: Line too long.");
         // Reset
         inpPtr = input;
         skipLine = true;
@@ -59,12 +58,9 @@ void handleSerialIn() {
 // On host die (linux or mac) you can use e.g.:
 // echo o0=70,2000,1000 > /dev/cu.usbXXXX
 // Supported commands are:
-// oN=X : Set output N to X (0 or 1)
+// oN=X[,attack[,delay]] : Set output N to X ([0;100])
 // r : Reset
-// t : Test the blinking
-// p=Y : Change minimum press time to Y (in ms), e.g. "p=25"
-// i : Info. Print version number and used times.
-// d=X: Turn debug mode on/off (1/0). If off serial printing is disabled.
+// i : Info. Print version number.
 void decodeSerialIn(char* inputStr) {
   // Check for command
   switch(inputStr[0]) {
@@ -76,8 +72,7 @@ void decodeSerialIn(char* inputStr) {
       int index = inputStr[1] - '0';
       // Check
       if(index < 0 || index >= COUNT_DOUTS) {
-        if(serialPrintAllowed())
-          serialPrint("Error: index\n");
+        Serial.println("Error: index");
         break;
       }
     
@@ -102,141 +97,34 @@ void decodeSerialIn(char* inputStr) {
       
     // Reset
     case 'r':
-      serialPrint("Resetting\n");
+      Serial.println("Resetting");
       delay(2000);
 #define RESTART_ADDR 0xE000ED0C
 #define WRITE_RESTART(val) ((*(volatile uint32_t *)RESTART_ADDR) = (val))
       WRITE_RESTART(0x5FA0004);
     break;
-      
-    // Test fast blinking
-    case 't':
-      serialPrint("Test");
-      serialPrintln();
-      fastBlinking();
-    break;
-      
-    // Change minimum press time
-    case 'p':
+     
+    // Info
+    case 'i':
     {
-      const char* inp = &inputStr[2];
-      MIN_PRESS_TIME = asciiToUint(&inp);
-      if(serialPrintAllowed()) {
-        serialPrint("Changing press time to ");
-        serialPrint(MIN_PRESS_TIME);
-        serialPrint("ms\n");
-      }
+      Serial.println("Version: " SW_VERSION);
+      Serial.print("Last error: ");Serial.println(lastError);
+      Serial.println();
+#ifdef ENABLE_LOGGING
+      printLog();
+#endif
     }
     break;
     
-    // Change minimum press time
-    case 'i':
-    {
-      bool prevDbg = DEBUG;
-      DEBUG = true;
-      if(serialPrintAllowed()) {
-        serialPrint("Version: " SW_VERSION "\n");
-        serialPrint("Min. press time:    ");serialPrint(MIN_PRESS_TIME);serialPrint("ms\n");
-        serialPrint("Max. time serial:   ");serialPrint(maxTimeSerial);serialPrint("us\n");
-        serialPrint("Max. time joystick: ");serialPrint(maxTimeJoystick);serialPrint("us\n");
-        serialPrint("Max. time total:    ");serialPrint(maxTimeTotal);serialPrint("us\n");
-        serialPrint("Last error: ");serialPrint(lastError);serialPrintln();
-        serialPrint("Debug Mode: ");
-        serialPrint(prevDbg ? "ON" : "OFF");
-        serialPrintln();
-#ifdef ENABLE_LOGGING
-        printLog();
-#endif
-      }
-      DEBUG = prevDbg;
-      // Reset times
-      maxTimeSerial = 0;
-      maxTimeJoystick = 0;
-      maxTimeTotal = 0;
-    }
-    break;
-
-    // Turn debug mode ON/OFF. Debug mode enables serial printing.
-    case 'd':
-    {
-      bool on = (inputStr[2] != '0');
-      DEBUG = true;
-      serialPrint("Debug Mode=");
-      serialPrint(on ? "ON" : "OFF");
-      serialPrintln();
-      DEBUG = on;
-    }
-    break;
-
     // Just a newline
     case 0:
     break;
       
     // Unknown command
     default:
-     if(serialPrintAllowed()) {
-        serialPrint("Error: Unknown command: ");
-        serialPrint(inputStr);
-        serialPrintln();
-      }
+      Serial.print("Error: Unknown command: ");
+      Serial.println(inputStr);
       //Serial.clear();
     break; 
   }   
-}
-
-
-// Returns true if printing is allowed.
-// Used to put several prints in a block.
-inline bool serialPrintAllowed() {
-    return DEBUG;
-//  return usb_tx_packet_count(CDC_TX_ENDPOINT) == 0;
-//  return usb_tx_packet_count(SEREMU_TX_ENDPOINT) == 0;
-}
-
-
-// Capsulates the printing functions.
-// Printing will only be done if 'DEBUG' is on.
-void serialPrint(const char* s) {
-  if(DEBUG)
-    Serial.print(s);
-}
-
-void serialPrint(char c) {
-  if(DEBUG)
-    Serial.print(c);
-}
-
-void serialPrint(uint8_t v) {
-  if(DEBUG)
-    Serial.print(v);
-}
-
-void serialPrint(uint16_t v) {
-  if(DEBUG)
-    Serial.print(v);
-}
-
-void serialPrint(int v) {
-  if(DEBUG)
-    Serial.print(v);
-}
-
-void serialPrint(int8_t v) {
-  if(DEBUG)
-    Serial.print(v);
-}
-
-void serialPrint(int16_t v) {
-  if(DEBUG)
-    Serial.print(v);
-}
-
-void serialPrint(bool b) {
-  if(DEBUG)
-    Serial.print(b);
-}
-
-void serialPrintln() {
-  if(DEBUG)
-    Serial.println();
 }

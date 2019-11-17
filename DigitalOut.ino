@@ -57,25 +57,23 @@ void setDout(uint8_t dout, int brightness, int attackMs, uint16_t delayMs) {
   statePtr->deltaBrightness = (statePtr->endBrightness - statePtr->brightness)/statePtr->attack;
 
   // Give feedback
-  if(serialPrintAllowed()) {
-    serialPrint("DOUT");
-    serialPrint(dout);
-    serialPrint(" (Pin=");
-    serialPrint(doutPins[dout]);
-    serialPrint(") set to ");
-    serialPrint(brightness);
-    if(attackMs) {
-      serialPrint(", attack=");
-      serialPrint(attackMs);
-      serialPrint("ms");
-    }
-    if(delayMs) {
-      serialPrint(", delay=");
-      serialPrint(delayMs);
-      serialPrint("ms");
-    }
-    serialPrintln();
+  Serial.print("DOUT");
+  Serial.print(dout);
+  Serial.print(" (Pin=");
+  Serial.print(doutPins[dout]);
+  Serial.print(") set to ");
+  Serial.print(brightness);
+  if(attackMs) {
+    Serial.print(", attack=");
+    Serial.print(attackMs);
+    Serial.print("ms");
   }
+  if(delayMs) {
+    Serial.print(", delay=");
+    Serial.print(delayMs);
+    Serial.print("ms");
+  }
+  Serial.println();
 }
 
 

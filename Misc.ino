@@ -26,15 +26,15 @@ void printLog() {
   if(endPrintPtr < logString)
     endPrintPtr = logString + sizeof(logString);
     
-  serialPrint("Log: ");
+  Serial.print("Log: ");
   while(char c = *printPtr++) {
     if(printPtr == endPrintPtr)
       break;
     if(printPtr >= logString + sizeof(logString))
       printPtr = logString;   
-    serialPrint(c);
+    Serial.print(c);
   }
-  serialPrintln();
+  Serial.println();
 }
 
 #endif
@@ -48,13 +48,10 @@ void printLog() {
 void error(const char* text) {
   // Save error
   strcpy(lastError, text);
-  // In debugmode ignore errors (ASSERTS)
-  if(DEBUG)
-    return;
   
   // Print text to serial
-  serialPrint(text);
-  serialPrintln();
+  Serial.print(text);
+  Serial.println();
   // blink
   fastBlinking();
 }
@@ -85,31 +82,6 @@ void fastBlinking() {
 }
 
 
-// Handles the Output and LED to indicate the USB polling rate for the joystick endpoint.
-void indicateUsbJoystickPollRate() {
-#ifdef USB_POLL_OUT_PIN
-    // USB_POLL_OUT:
-    static bool usbPollOut = false;
-    usbPollOut = !usbPollOut;
-    digitalWrite(USB_POLL_OUT_PIN, usbPollOut);
-#endif
-
-#ifdef MAIN_LED_PIN
-    // Main LED (poll time / 1000)
-    static bool mainLedOut = false;
-    static int mainLedCounter = 0;
-    mainLedCounter--;
-    if(mainLedCounter < 0) {
-      // toggle main LED
-      mainLedOut = !mainLedOut;
-      digitalWrite(MAIN_LED_PIN, mainLedOut);
-      mainLedCounter = 1000;
-    }
-#endif
-}
-
-
-
 // Converts an ascii string into a number.
 // Returns the value and also the string pointer to the first
 // non-digit character.
@@ -124,10 +96,8 @@ uint16_t asciiToUint(const char** s) {
     }
     // check count of digits
     if(++k > 5) {
-      if(serialPrintAllowed()) {
-        serialPrint("Error: too many digits");
-        serialPrintln();
-      }
+      Serial.print("Error: too many digits");
+      Serial.println();
       value = 65535;
       break;
     }
