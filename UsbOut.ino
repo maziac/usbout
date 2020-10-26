@@ -13,10 +13,16 @@ The features are:
 
 
 // *** CONFIGURATION BEGIN ************************************************
-// DOUT 0-3 = Pin 16, 17, 22, 23
+// Cocktail table configuration. I.e. for 2 players.
+// DOUT 0-2 = Pin 16, 17, 22
+// Shadowed to Pin 10, 9, 6
+// I.e. Pin 16/10, 17/9 and 22/6 are addressed in pairs.
 
 // The digital out permutation table. Logical outs [0;3] are mapped to physical pins.
-uint8_t doutPins[] = { 16, 17, 22, 23 };  // Use pins capable of PWM
+uint8_t doutPins[] = { 
+  16, 17, 22,   // Player 1 LEDs
+  10, 9, 6      // Player 2 LEDs
+};  // Use pins capable of PWM
 
 
 

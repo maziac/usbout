@@ -92,6 +92,13 @@ void decodeSerialIn(char* inputStr) {
       
       // Set pin
       setDout(index, value, attackTime, delayTime);
+      
+      // Set also shodow pin for 2nd player
+      uint16_t shadowIndex = index + COUNT_DOUTS/2;
+      if(shadowIndex >= COUNT_DOUTS)
+        shadowIndex -= COUNT_DOUTS;
+      setDout(shadowIndex, value, attackTime, delayTime);
+      
     }
     break;    
       
