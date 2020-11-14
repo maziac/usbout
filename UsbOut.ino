@@ -20,7 +20,7 @@ The features are:
 
 // The digital out permutation table. Logical outs [0;3] are mapped to physical pins.
 uint8_t doutPins[] = { 
-  16, 17, 22,   // Player 1 LEDs
+  16, 17, 20,   // Player 1 LEDs
   10, 9, 6      // Player 2 LEDs
 };  // Use pins capable of PWM
 
