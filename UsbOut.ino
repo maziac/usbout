@@ -1,4 +1,4 @@
-/* 
+/*
 USB Joystick using a Teensy LC board.
 The features are:
 - Requested 1ms USB poll time
@@ -13,18 +13,10 @@ The features are:
 
 
 // *** CONFIGURATION BEGIN ************************************************
-// Cocktail table configuration. I.e. for 2 players.
-// DOUT 0-2 = Pin 10, 9, 6
-// Shadowed to Pin 16, 17, 22
-// I.e. Pin 16/10, 17/9 and 22/6 are addressed in pairs.
+// DOUT 0-3 = Pin 16, 17, 22, 23
 
-// The digital out permutation table. There are 5 outs defined, so 2 more are possible but currently unused.
-uint8_t doutPins[] = { 
-  10, 9, 6,     0, 1,   // P1: O0=Pin10, O1=Pin9, O2=Pin6, Other 2 unused
-  16, 17, 20,   18, 19, // P2: O0=Pin16, O1=Pin17, O2=Pin20, Other 2 unused
-};
-
-
+// The digital out permutation table. Logical outs [0;3] are mapped to physical pins.
+uint8_t doutPins[] = {16, 17, 22, 23}; // Use pins capable of PWM
 
 // *** CONFIGURATION END **************************************************
 
@@ -57,7 +49,7 @@ void setup() {
 
 // MAIN LOOP
 void loop() {
-    
+
   // Handle serial in
   handleSerialIn();
 
@@ -66,5 +58,5 @@ void loop() {
 
   // Call handleDout approx every 1 ms
   delay(1);
-  
+
 }
