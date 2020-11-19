@@ -17,7 +17,7 @@ void handleSerialIn() {
 #endif
 
     if(c == '\r') 
-      break;   // Skip windows character
+      continue;   // Skip windows character
       
     if(c == '\n') {
       // End found
@@ -31,7 +31,6 @@ void handleSerialIn() {
       // Reset
       inpPtr = input;
       skipLine = false;
-      break;
     }
     else {
       // Remember character
@@ -44,7 +43,6 @@ void handleSerialIn() {
         // Reset
         inpPtr = input;
         skipLine = true;
-        break;    
       }
     }
   }

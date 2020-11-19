@@ -56,6 +56,8 @@ void setDout(uint8_t dout, int brightness, int attackMs, uint16_t delayMs) {
   statePtr->endBrightness = (brightness*65535l)/100;
   statePtr->deltaBrightness = (statePtr->endBrightness - statePtr->brightness)/statePtr->attack;
 
+/*
+ // With feedback enabled this behaves strange under Linux.
   // Give feedback
   Serial.print("DOUT");
   Serial.print(dout);
@@ -74,6 +76,7 @@ void setDout(uint8_t dout, int brightness, int attackMs, uint16_t delayMs) {
     Serial.print("ms");
   }
   Serial.println();
+  */
 }
 
 
