@@ -22,7 +22,7 @@ uint8_t doutPins[] = {16, 17, 22, 23}; // Use pins capable of PWM
 
 
 // The SW version.
-#define SW_VERSION "1.1 Cocktail Table"
+#define SW_VERSION "1.1"
 
 
 // Uncomment to allow logging.

@@ -30,7 +30,7 @@ The full syntax for this command is:
 All times are in ms.
 If you omit the values 0 are assumed for 'attack' and 'delay' and the value of the digital out is changed immediately.
 
-PWM is used to allow to "dim" the digital outputs. 
+PWM is used to allow to "dim" the digital outputs.
 
 
 # HW
@@ -73,12 +73,14 @@ You will get a response from the SW like this:
 DOUT0 (Pin=16) set to 100
 ~~~
 
+Note: Beginning with version 1.1 the response from the device has been turned off. This was done because of a problem with Linux. You will not get a response for setting the out pins anymore.
+
 ## Configuration:
 
 The digital outs can be mapped to different pins.
-This is done in the configuration section in UsbOut.ino via the array 
+This is done in the configuration section in UsbOut.ino via the array
 ~~~
-uint8_t doutPins[] = { 16, 17, 22, 23 }; 
+uint8_t doutPins[] = { 16, 17, 22, 23 };
 ~~~
 Use pins that are capable of PWM. If you use different pins they can only be turned ON (100) or OFF (0).
 Only for PWM capable pins it is possible to dim the brightness.
